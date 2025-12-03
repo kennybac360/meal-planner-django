@@ -1,0 +1,35 @@
+{% extends "planner/base.html" %}
+{% block content %}
+<h1>Shopping List – Week of {{ shopping_list.week_start_date }}</h1>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Ingredient</th>
+        <th>Quantity</th>
+        <th>Unit</th>
+        <th>Purchased</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in shopping_list.items.all %}
+        <tr>
+            <td>{{ item.ingredient.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unit }}</td>
+            <td>
+                {% if item.is_checked %}
+                    ✅
+                {% else %}
+                    ⬜
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="4">No items on this list yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'planner:recipe-list' %}" class="btn btn-secondary mt-3">Back to Recipes</a>
+{% endblock %}

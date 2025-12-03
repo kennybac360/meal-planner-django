@@ -1,0 +1,33 @@
+{% extends "planner/base.html" %}
+{% block content %}
+<h1>Your Recipes</h1>
+
+{% if recipes %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Meal Type</th>
+            <th>Servings</th>
+            <th>Calories / Serving</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for recipe in recipes %}
+            <tr>
+                <td>
+                    <a href="{% url 'planner:recipe-detail' recipe.pk %}">
+                        {{ recipe.name }}
+                    </a>
+                </td>
+                <td>{{ recipe.get_meal_type_display }}</td>
+                <td>{{ recipe.servings }}</td>
+                <td>{{ recipe.per_serving_calories|floatformat:0 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You have no recipes yet. Add some in the admin panel.</p>
+{% endif %}
+{% endblock %}
