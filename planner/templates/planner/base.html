@@ -1,4 +1,3 @@
-<!-- planner/templates/planner/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +10,33 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container">
         <a class="navbar-brand" href="{% url 'planner:recipe-list' %}">Meal Planner</a>
-        <span class="navbar-text">
-            {% if request.user.is_authenticated %}
-                Logged in as {{ request.user.username }}
-            {% endif %}
-        </span>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'planner:recipe-list' %}">Recipes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'planner:mealplan-list' %}">Meal Plans</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'planner:shoppinglist-list' %}">Shopping Lists</a>
+                </li>
+            </ul>
+            <span class="navbar-text">
+                {% if request.user.is_authenticated %}
+                    Logged in as {{ request.user.username }} |
+                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="btn btn-link p-0 m-0 align-baseline text-decoration-none text-light">
+                            Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-decoration-none text-light">Login</a>
+                {% endif %}
+            </span>
+        </div>
     </div>
 </nav>
 

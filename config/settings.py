@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'planner',
 ]
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "planner:recipe-list"
+LOGOUT_REDIRECT_URL = "planner:recipe-list"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
