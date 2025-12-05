@@ -1,0 +1,43 @@
+{% extends "planner/base.html" %}
+{% block content %}
+<h1>Meal Plan for {{ day.date }}</h1>
+{% if day.notes %}
+    <p><em>{{ day.notes }}</em></p>
+{% endif %}
+
+<h3>Meals</h3>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Meal Type</th>
+        <th>Recipe</th>
+        <th>Portion</th>
+        <th>Calories (approx)</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for entry in day.entries.all %}
+        <tr>
+            <td>{{ entry.get_meal_type_display }}</td>
+            <td>
+                <a href="{% url 'planner:recipe-detail' entry.recipe.pk %}">
+                    {{ entry.recipe.name }}
+                </a>
+            </td>
+            <td>{{ entry.portion_multiplier }} × serving</td>
+            <td>
+                {{ entry.portion_multiplier|floatformat:1 }} ×
+                {{ entry.recipe.per_serving_calories|floatformat:0 }}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="4">No meals planned for this day.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Total Daily Calories (approx)</h3>
+<p><strong>{{ day.total_daily_calories|floatformat:0 }}</strong> kcal</p>
+
+<a href="{% url 'planner:mealplan-list' %}" class="btn btn-secondary mt-3">Back to Meal Plans</a>
+{% endblock %}

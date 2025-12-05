@@ -1,0 +1,54 @@
+{% extends "planner/base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>{{ recipe.name }}</h1>
+    <a href="{% url 'planner:recipe-edit' recipe.pk %}" class="btn btn-secondary">Edit</a>
+</div>
+
+<p><strong>Meal Type:</strong> {{ recipe.get_meal_type_display }}</p>
+<p><strong>Servings:</strong> {{ recipe.servings }}</p>
+
+<h3>Ingredients</h3>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Ingredient</th>
+        <th>Quantity</th>
+        <th>Unit</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ri in recipe.recipe_ingredients.all %}
+        <tr>
+            <td>{{ ri.ingredient.name }}</td>
+            <td>{{ ri.quantity }}</td>
+            <td>{{ ri.unit }}</td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="3">No ingredients defined for this recipe.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Nutrition (Total)</h3>
+<ul>
+    <li>Calories: {{ recipe.total_calories|floatformat:0 }}</li>
+    <li>Protein: {{ recipe.total_protein|floatformat:1 }} g</li>
+    <li>Carbs: {{ recipe.total_carbs|floatformat:1 }} g</li>
+    <li>Fat: {{ recipe.total_fat|floatformat:1 }} g</li>
+    <li>Sodium: {{ recipe.total_sodium|floatformat:0 }} mg</li>
+</ul>
+
+<h3>Nutrition (Per Serving)</h3>
+<ul>
+    <li>Calories: {{ recipe.per_serving_calories|floatformat:0 }}</li>
+    <li>Protein: {{ recipe.per_serving_protein|floatformat:1 }} g</li>
+</ul>
+
+{% if recipe.instructions %}
+    <h3>Instructions</h3>
+    <p>{{ recipe.instructions }}</p>
+{% endif %}
+
+<a href="{% url 'planner:recipe-list' %}" class="btn btn-secondary mt-3">Back to Recipes</a>
+{% endblock %}

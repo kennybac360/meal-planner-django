@@ -1,4 +1,4 @@
-from django.db import models
+from django.db.models import Sum, F, FloatField
 
 # Create your models here.
 from django.db import models
@@ -44,6 +44,37 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def total_calories(self):
+        return sum(
+            ri.quantity * ri.ingredient.calories_per_unit
+            for ri in self.recipe_ingredients.all()
+        )
+    def total_protein(self):
+        return sum(
+            ri.quantity * ri.ingredient.protein_g_per_unit
+            for ri in self.recipe_ingredients.all()
+        )
+    def total_carbs(self):
+        return sum(
+            ri.quantity * ri.ingredient.carbs_g_per_unit
+            for ri in self.recipe_ingredients.all()
+        )
+    def total_fat(self):
+        return sum(
+            ri.quantity * ri.ingredient.fat_g_per_unit
+            for ri in self.recipe_ingredients.all()
+        )
+    def total_sodium(self):
+        return sum(
+            ri.quantity * ri.ingredient.sodium_mg_per_unit
+            for ri in self.recipe_ingredients.all()
+        )
+    def per_serving_calories(self):
+        return self.total_calories() / self.servings if self.servings else 0
+    
+    def per_serving_protein(self):
+        return self.total_protein() / self.servings if self.servings else 0
 
 
 class RecipeIngredient(models.Model):
@@ -70,6 +101,11 @@ class MealPlanDay(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.date}"
+    def total_daily_calories(self):
+        total = 0
+        for entry in self.entries.select_related('recipe'):
+            total+= entry.portion_multiplier * entry.recipe.per_serving_calories()
+        return total
 
 
 class MealEntry(models.Model):
