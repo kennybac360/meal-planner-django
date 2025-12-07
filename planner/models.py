@@ -29,6 +29,7 @@ class Ingredient(models.Model):
 
 class Recipe(models.Model):
     MEAL_TYPES = [
+        ("any", "Any"),
         ("breakfast", "Breakfast"),
         ("lunch", "Lunch"),
         ("dinner", "Dinner"),
